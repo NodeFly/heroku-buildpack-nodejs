@@ -1,0 +1,45 @@
+#!/usr/bin/env node-exec
+ 
+var path = require('path')
+var vm   = require('vm');
+var fs   = require('fs');
+ 
+// Prepare to load file argument as main module
+var file  = path.resolve(process.argv[2]);
+var data  = fs.readFileSync(file);
+ 
+var dir   = path.dirname(file);
+var fname = path.basename(file);
+ 
+// Adjust module object for file
+module.paths.unshift(path.join(dir,'node_modules'));
+module.filename = file;
+ 
+process.chdir(dir);
+ 
+// Inject NodeFly
+//
+// This will intercept the require function
+// passed to all loaded modules
+require('nodefly').profile(
+  process.env.NODEFLY_APP_KEY,
+	process.env.NODEFLY_APP_NAME
+);
+ 
+// Setup module globals
+var sandbox = {
+	module      : module, 
+	exports     : exports, 
+	require     : require,
+	__filename  : fname,
+	__dirname   : dir,
+	global      : sandbox,
+	root        : root
+}
+ 
+for (var k in global) {
+  sandbox[k] = global[k];
+}
+ 
+// Run!
+vm.createScript(data,fname).runInNewContext(sandbox);

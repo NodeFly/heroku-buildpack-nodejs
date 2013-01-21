@@ -51,6 +51,10 @@ function run_npm() {
   fi
 }
 
+function nodefly() {
+  cp $LP_DIR/vendor/nodefly/node $BUILD_DIR/bin/node
+}
+
 function manifest_versions() {
   curl "http://${S3_BUCKET}.s3.amazonaws.com/manifest.${1}" -s -o - | tr -s '\n' ' '
 }
@@ -159,7 +163,10 @@ package_download "scons" "${SCONS_VERSION}" "${VENDORED_SCONS}"
 PATH="$BUILD_DIR/bin:$PATH"
 echo "-----> Vendoring node into slug"
 mkdir -p "$BUILD_DIR/bin"
-cp "$VENDORED_NODE/bin/node" "$BUILD_DIR/bin/node"
+cp "$VENDORED_NODE/bin/node" "$BUILD_DIR/bin/node-exec"
+
+echo "-----> Injecting NodeFly APM"
+nodefly
 
 # setting up paths for building
 PATH="$VENDORED_SCONS:$VENDORED_NODE/bin:$PATH"

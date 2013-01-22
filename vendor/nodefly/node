@@ -22,7 +22,7 @@ process.chdir(dir);
 // This will intercept the require function
 // passed to all loaded modules
 
-var APP_KEY = process.env.NODEFLY_APP_KEY;
+var APP_KEY = process.env.NODEFLY_APPLICATION_KEY;
 
 if(APP_KEY){
   APP_NAME = process.env.NODEFLY_APP_NAME || 'Untitled Application';

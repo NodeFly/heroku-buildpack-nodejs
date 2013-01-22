@@ -27,9 +27,11 @@ var APP_KEY = process.env.NODEFLY_APP_KEY;
 if(APP_KEY){
   APP_NAME = process.env.NODEFLY_APP_NAME || 'Untitled Application';
   require('nodefly').profile( APP_KEY, [APP_NAME, 'Heroku'] );
+  console.log('[NodeFly] APM Successfully Injected');
+  console.log('[NodeFly] View your metrics from the NodeFly Dashboard at http://nodefly.com/');
 }else{
-  console.log('Please Configure NodeFly Application');
-  console.log('Run `heroku config:set NODEFLY_APP_KEY=<KEY>` where <KEY> can be obtained from http://nodefly.com/');
+  console.log('[NodeFly] Please Configure NodeFly Application');
+  console.log('[NodeFly] Run `heroku config:set NODEFLY_APP_KEY=<KEY>` where <KEY> can be obtained from http://nodefly.com/');
 }
 
 // Setup module globals

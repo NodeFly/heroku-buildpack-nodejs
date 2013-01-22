@@ -21,20 +21,27 @@ process.chdir(dir);
 //
 // This will intercept the require function
 // passed to all loaded modules
-require('nodefly').profile(
-  process.env.NODEFLY_APP_KEY,
-	process.env.NODEFLY_APP_NAME
-);
- 
+
+if(NODEFLY_APP_KEY){
+  APP_NAME = process.env.NODEFLY_APP_NAME || 'Untitled Application';
+  require('nodefly').profile(
+    process.env.NODEFLY_APP_KEY,
+    [APP_NAME, 'Heroku']
+  );
+}else{
+  console.log('Please Configure NodeFly Application');
+  console.log('Run `heroku config:set NODEFLY_APP_KEY=<KEY>` where <KEY> can be obtained from http://nodefly.com/');
+}
+
 // Setup module globals
 var sandbox = {
-	module      : module, 
-	exports     : exports, 
-	require     : require,
-	__filename  : fname,
-	__dirname   : dir,
-	global      : sandbox,
-	root        : root
+  module      : module, 
+  exports     : exports, 
+  require     : require,
+  __filename  : fname,
+  __dirname   : dir,
+  global      : sandbox,
+  root        : root
 }
  
 for (var k in global) {
